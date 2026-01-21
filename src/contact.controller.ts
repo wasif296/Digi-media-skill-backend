@@ -11,7 +11,7 @@ export class ContactController {
 
     try {
       await this.mailerService.sendMail({
-        to: 'wasifzahoor296@gmail.com', 
+        to: 'Digimediaskill@gmail.com', 
         subject: `New Project Inquiry: ${company || 'Client'}`,
         html: `
           <div style="font-family: sans-serif; padding: 20px; border: 1px solid #10B981; border-radius: 10px;">
@@ -46,7 +46,8 @@ export class ContactController {
 
       return { success: true, message: 'Emails sent to both Admin and Client.' };
     } catch (error) {
-      console.error("Mailer Error:", error);
+      console.log(body);
+      console.log("Mailer Error:", error);
       throw new InternalServerErrorException('Failed to process inquiry.');
     }
   }
