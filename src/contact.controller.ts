@@ -7,56 +7,69 @@ export class ContactController {
 
   @Post('send')
   async sendInquiry(@Body() body: any) {
-    // --- STEP 1: Check if request arrived ---
-    console.log("📩 Request received at /contact/send");
-    console.log("📦 Data Body:", body);
+    console.log("📩 New Request Arrived at Backend");
+    console.log("📦 Incoming Data:", body);
 
-    const { fullName, email, phone, company, services, message } = body;
+    const { 
+      fullName = "Not Provided", 
+      email = "Not Provided", 
+      phone = "No Phone Provided", 
+      company = "N/A", 
+      services = [], 
+      message = "No Message Provided" 
+    } = body;
 
-    // Safety check for services array
-    const selectedServices = Array.isArray(services) ? services.join(", ") : (services || "Not Specified");
+    const selectedServices = Array.isArray(services) 
+      ? (services.length > 0 ? services.join(", ") : "None Selected") 
+      : (services || "Not Specified");
 
     try {
-      // --- STEP 2: Sending Admin Email ---
       console.log("⏳ Sending Email to Admin...");
       await this.mailerService.sendMail({
         to: 'digimediaskill@gmail.com', 
-        subject: `🚀 New Project Inquiry: ${company || 'Client'}`,
+        subject: `🚀 Website Inquiry: ${company}`,
         html: `
-          <div style="font-family: sans-serif; padding: 20px; border: 1px solid #10B981; border-radius: 10px;">
-            <h2 style="color: #10B981;">New Inquiry from Website</h2>
-            <p><strong>Name:</strong> ${fullName}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone }</p>
-            <p><strong>Services:</strong> ${selectedServices}</p>
-            <p><strong>Message:</strong> ${message}</p>
+          <div style="font-family: Arial, sans-serif; padding: 25px; border: 2px solid #10B981; border-radius: 15px; max-width: 600px; color: #333;">
+            <h2 style="color: #10B981; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 15px;">New Project Inquiry</h2>
+            <div style="margin-top: 20px; line-height: 1.8;">
+              <p><strong>👤 Name:</strong> ${fullName}</p>
+              <p><strong>📧 Email:</strong> ${email}</p>
+              <p><strong>📞 Phone:</strong> <span style="color: #2563EB; font-weight: bold;">${phone}</span></p>
+              <p><strong>🏢 Company:</strong> ${company}</p>
+              <p><strong>🛠️ Services:</strong> ${selectedServices}</p>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-left: 4px solid #10B981; border-radius: 5px;">
+              <strong>💬 Message:</strong><br/>
+              <p style="margin-top: 10px;">${message}</p>
+            </div>
+            <p style="text-align: center; margin-top: 20px; font-size: 11px; color: #999;">Sent from Digi Media Skill Website</p>
           </div>
         `,
       });
-      console.log("✅ Admin Email Sent!");
+      console.log("✅ Admin Email Done");
 
-      // --- STEP 3: Sending Client Auto-Reply ---
-      console.log(`⏳ Sending Auto-reply to ${email}...`);
+      console.log(`⏳ Sending Confirmation to ${email}...`);
       await this.mailerService.sendMail({
         to: email, 
-        subject: `Thank you for contacting Digi Media Skill! ✨`,
+        subject: `We've received your inquiry - Digi Media Skill ✨`,
         html: `
-          <div style="font-family: sans-serif; padding: 30px; border-radius: 20px; background-color: #fafafa; color: #333; max-width: 600px; margin: auto; border: 1px solid #eee;">
+          <div style="font-family: Arial, sans-serif; padding: 30px; border-radius: 15px; background-color: #fafafa; border: 1px solid #eee; max-width: 600px; margin: auto;">
             <h1 style="color: #10B981; text-align: center;">Hello ${fullName}!</h1>
-            <p style="font-size: 16px; line-height: 1.6; text-align: center;">
-              Thank you for reaching out to <strong>Digi Media Skill</strong>. We have received your inquiry.
-            </p>
-            <p style="text-align: center; margin-top: 20px;">Our team will get back to you within 24 hours.</p>
+            <p style="font-size: 16px; color: #555; text-align: center;">Thank you for reaching out to us. We have received your inquiry regarding <strong>${selectedServices}</strong>.</p>
+            <p style="font-size: 14px; color: #777; text-align: center; margin-top: 15px;">Our team will review your details and contact you at <strong>${phone}</strong> within 24 hours.</p>
+            <div style="margin-top: 30px; border-top: 2px solid #10B981; pt-20px; text-align: center;">
+              <p style="margin-top: 20px; font-weight: bold; color: #10B981;">Digi Media Skill Team</p>
+            </div>
           </div>
         `,
       });
-      console.log("✅ Client Auto-reply Sent!");
+      console.log("✅ Client Auto-reply Done");
 
-      return { success: true, message: 'Emails sent successfully.' };
+      return { success: true, message: 'Emails delivered successfully.' };
 
     } catch (error) {
-      console.error("❌ MAILER ERROR DETAILS:", error);
-      throw new InternalServerErrorException('Failed to process inquiry: ' + error.message);
+      console.error("❌ MAILER ERROR:", error);
+      throw new InternalServerErrorException('Mailer Service Error: ' + error.message);
     }
   }
 }
