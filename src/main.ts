@@ -6,12 +6,18 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'http://localhost:5173', 
-      'https://digi-media-skill.vercel.app'
-    ], 
+      'https://digimediaskills.com',
+      'http://localhost:5173',
+      'https://digi-media-skill.vercel.app',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Accept', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: [
+      'Content-Type',
+      'Accept',
+      'Authorization',
+      'X-Requested-With',
+    ],
   });
 
   await app.listen(process.env.PORT || 3000);

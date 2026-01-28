@@ -1,0 +1,6 @@
+MONGO_URI=mongodb+srv://digi-media-skill:Schooldays123@cluster0.xwmfi0g.mongodb.net/?appName=Cluster0&authSource=admin&w=majority
+ADMIN_EMAIL=admin@digimedia.com
+ADMIN_PASSWORD=admin123
+SMTP_USER=digimediaskill@gmail.com
+SMTP_PASS=pnzn hpdz zyyd jfyr
+PORT=3000
