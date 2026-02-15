@@ -3,20 +3,23 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Project extends Document {
-  @Prop({ required: true })
-  title: string;
+  @Prop()
+  title?: string;
 
-  @Prop({ required: true })
-  category: string;
+  @Prop()
+  category?: string;
 
-  @Prop({ required: true })
-  result: string; 
+  @Prop()
+  result?: string;
 
-  @Prop({ required: true })
-  imageUrl: string; 
+  @Prop()
+  imageUrl?: string;
 
-  @Prop({ required: true })
-  link: string;
+  @Prop()
+  videoUrl?: string;
+
+  @Prop()
+  link?: string;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

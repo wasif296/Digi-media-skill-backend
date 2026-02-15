@@ -1,8 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import dns from 'dns';
 
 async function bootstrap() {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+
   const app = await NestFactory.create(AppModule);
+
+  // Increase payload size limits for file uploads (for Hostinger or VPS)
+  const express = require('express');
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
   app.enableCors({
     origin: [
@@ -22,5 +30,13 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3000);
   console.log(`🚀 API is live and accepting requests from Digi Media Frontend`);
+
+  // Global error handler to log all errors to the terminal
+  process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+  });
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  });
 }
 bootstrap();
