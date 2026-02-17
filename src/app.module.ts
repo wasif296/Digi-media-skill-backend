@@ -20,9 +20,16 @@ import 'dotenv/config';
       host: 'smtp.gmail.com',
       port: 587,
       secure: false,
+      requireTLS: true,
       auth: {
         user: configService.get<string>('SMTP_USER'),
         pass: configService.get<string>('SMTP_PASS'),
+      },
+      connectionTimeout: 10000,
+      socketTimeout: 10000,
+      pool: {
+        maxConnections: 1,
+        maxMessages: 5,
       },
     },
     defaults: {

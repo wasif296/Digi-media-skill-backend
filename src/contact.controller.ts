@@ -3,6 +3,7 @@ import {
   Post,
   Body,
   InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -22,6 +23,11 @@ export class ContactController {
       message?: string;
     },
   ) {
+    // Validate body exists
+    if (!body || Object.keys(body).length === 0) {
+      throw new BadRequestException('Request body is required');
+    }
+
     console.log('📩 New Request Arrived at Backend');
     console.log('📦 Incoming Data:', body);
 
@@ -86,7 +92,7 @@ export class ContactController {
     } catch (error) {
       console.error('❌ MAILER ERROR:', error);
       throw new InternalServerErrorException(
-        'Mailer Service Error: ' + error.message,
+        'Mailer Service Error: ' + (error instanceof Error ? error.message : 'Unknown error'),
       );
     }
   }
