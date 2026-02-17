@@ -18,19 +18,14 @@ import 'dotenv/config';
   useFactory: (configService: ConfigService) => ({
     transport: {
       host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      requireTLS: true,
+      port: 465,
+      secure: true,
       auth: {
         user: configService.get<string>('SMTP_USER'),
         pass: configService.get<string>('SMTP_PASS'),
       },
-      connectionTimeout: 10000,
-      socketTimeout: 10000,
-      pool: {
-        maxConnections: 1,
-        maxMessages: 5,
-      },
+      connectionTimeout: 5000,
+      socketTimeout: 5000,
     },
     defaults: {
       from: `"Digi Media Skill" <${configService.get<string>('SMTP_USER')}>`,
