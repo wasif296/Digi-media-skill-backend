@@ -11,7 +11,10 @@ import { storage } from '../cloudinary-storage';
 export class UploadController {
   @Post()
   @UseInterceptors(FileInterceptor('file', { storage }))
-  uploadFile(@UploadedFile() file: any) {
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    if (!file || !file.path) {
+      return { error: 'Cloudinary upload failed or file not supported.' };
+    }
     return { url: file.path };
   }
 }

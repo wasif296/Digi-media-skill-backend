@@ -1,4 +1,9 @@
-import { Controller, Post, Body, InternalServerErrorException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Controller('contact')
@@ -6,27 +11,39 @@ export class ContactController {
   constructor(private readonly mailerService: MailerService) {}
 
   @Post('send')
-  async sendInquiry(@Body() body: any) {
-    console.log("📩 New Request Arrived at Backend");
-    console.log("📦 Incoming Data:", body);
+  async sendInquiry(
+    @Body()
+    body: {
+      fullName?: string;
+      email?: string;
+      phone?: string;
+      company?: string;
+      services?: string[];
+      message?: string;
+    },
+  ) {
+    console.log('📩 New Request Arrived at Backend');
+    console.log('📦 Incoming Data:', body);
 
-    const { 
-      fullName = "Not Provided", 
-      email = "Not Provided", 
-      phone = "No Phone Provided", 
-      company = "N/A", 
-      services = [], 
-      message = "No Message Provided" 
+    const {
+      fullName = 'Not Provided',
+      email = 'Not Provided',
+      phone = 'No Phone Provided',
+      company = 'N/A',
+      services = [],
+      message = 'No Message Provided',
     } = body;
 
-    const selectedServices = Array.isArray(services) 
-      ? (services.length > 0 ? services.join(", ") : "None Selected") 
-      : (services || "Not Specified");
+    const selectedServices = Array.isArray(services)
+      ? services.length > 0
+        ? services.join(', ')
+        : 'None Selected'
+      : services || 'Not Specified';
 
     try {
-      console.log("⏳ Sending Email to Admin...");
+      console.log('⏳ Sending Email to Admin...');
       await this.mailerService.sendMail({
-        to: 'digimediaskill@gmail.com', 
+        to: 'digimediaskill@gmail.com',
         subject: `🚀 Website Inquiry: ${company}`,
         html: `
           <div style="font-family: Arial, sans-serif; padding: 25px; border: 2px solid #10B981; border-radius: 15px; max-width: 600px; color: #333;">
@@ -46,11 +63,11 @@ export class ContactController {
           </div>
         `,
       });
-      console.log("✅ Admin Email Done");
+      console.log('✅ Admin Email Done');
 
       console.log(`⏳ Sending Confirmation to ${email}...`);
       await this.mailerService.sendMail({
-        to: email, 
+        to: email,
         subject: `We've received your inquiry - Digi Media Skill ✨`,
         html: `
           <div style="font-family: Arial, sans-serif; padding: 30px; border-radius: 15px; background-color: #fafafa; border: 1px solid #eee; max-width: 600px; margin: auto;">
@@ -63,13 +80,14 @@ export class ContactController {
           </div>
         `,
       });
-      console.log("✅ Client Auto-reply Done");
+      console.log('✅ Client Auto-reply Done');
 
       return { success: true, message: 'Emails delivered successfully.' };
-
     } catch (error) {
-      console.error("❌ MAILER ERROR:", error);
-      throw new InternalServerErrorException('Mailer Service Error: ' + error.message);
+      console.error('❌ MAILER ERROR:', error);
+      throw new InternalServerErrorException(
+        'Mailer Service Error: ' + error.message,
+      );
     }
   }
 }
