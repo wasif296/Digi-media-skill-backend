@@ -4,11 +4,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer'; 
 import { ProjectsModule } from './projects/projects.module';
 import AuthController from './projects/auth.controllers';
-import { ContactController } from './contact.controller'; 
+import { ContactController } from './contact.controller';
+import { CloudinaryProvider } from './cloudinary';
+import { validate } from './env.validation';
 import 'dotenv/config';
+
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, validate }),
 
    MailerModule.forRootAsync({
   inject: [ConfigService],
@@ -38,5 +41,6 @@ import 'dotenv/config';
     ProjectsModule,
   ],
   controllers: [AuthController, ContactController],
+  providers: [CloudinaryProvider],
 })
 export class AppModule {}
