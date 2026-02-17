@@ -4,27 +4,27 @@ import { IsNotEmpty, IsString, validateSync } from 'class-validator';
 class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
-  MONGO_URI: string;
+  MONGO_URI!: string;
 
   @IsString()
   @IsNotEmpty()
-  ADMIN_EMAIL: string;
+  ADMIN_EMAIL!: string;
 
   @IsString()
   @IsNotEmpty()
-  ADMIN_PASSWORD: string;
+  ADMIN_PASSWORD!: string;
 
   @IsString()
   @IsNotEmpty()
-  SMTP_USER: string;
+  SMTP_USER!: string;
 
   @IsString()
   @IsNotEmpty()
-  SMTP_PASS: string;
+  SMTP_PASS!: string;
 
   @IsString()
   @IsNotEmpty()
-  CONTACT_EMAIL: string;
+  CONTACT_EMAIL!: string;
 
   @IsString()
   PORT: string = '3000';

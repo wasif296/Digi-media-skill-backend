@@ -25,11 +25,17 @@ export class ContactController {
   ) {
     // Validate body exists
     if (!body || Object.keys(body).length === 0) {
+      console.log('❌ No body received in request');
       throw new BadRequestException('Request body is required');
     }
 
     console.log('📩 New Request Arrived at Backend');
     console.log('📦 Incoming Data:', body);
+    try {
+      console.log('🔎 Full body:', JSON.stringify(body));
+    } catch (e) {
+      console.log('❌ Error stringifying body:', e);
+    }
 
     const {
       fullName = 'Not Provided',
@@ -40,14 +46,34 @@ export class ContactController {
       message = 'No Message Provided',
     } = body;
 
+    console.log('📝 Parsed fields:', {
+      fullName,
+      email,
+      phone,
+      company,
+      services,
+      message,
+    });
+
     const selectedServices = Array.isArray(services)
       ? services.length > 0
         ? services.join(', ')
         : 'None Selected'
       : services || 'Not Specified';
+    console.log('🛠️ selectedServices:', selectedServices);
 
     try {
       console.log('⏳ Sending Email to Admin...');
+      console.log('📧 Admin email payload:', {
+        to: 'digimediaskill@gmail.com',
+        subject: `🚀 Website Inquiry: ${company}`,
+        fullName,
+        email,
+        phone,
+        company,
+        selectedServices,
+        message,
+      });
       await this.mailerService.sendMail({
         to: 'digimediaskill@gmail.com',
         subject: `🚀 Website Inquiry: ${company}`,
@@ -72,6 +98,13 @@ export class ContactController {
       console.log('✅ Admin Email Done');
 
       console.log(`⏳ Sending Confirmation to ${email}...`);
+      console.log('📧 Client email payload:', {
+        to: email,
+        subject: `We've received your inquiry - Digi Media Skill ✨`,
+        fullName,
+        phone,
+        selectedServices,
+      });
       await this.mailerService.sendMail({
         to: email,
         subject: `We've received your inquiry - Digi Media Skill ✨`,
@@ -91,8 +124,14 @@ export class ContactController {
       return { success: true, message: 'Emails delivered successfully.' };
     } catch (error) {
       console.error('❌ MAILER ERROR:', error);
+      try {
+        console.error('❌ MAILER ERROR (stringified):', JSON.stringify(error));
+      } catch (e) {
+        console.error('❌ MAILER ERROR (stringify failed):', e);
+      }
       throw new InternalServerErrorException(
-        'Mailer Service Error: ' + (error instanceof Error ? error.message : 'Unknown error'),
+        'Mailer Service Error: ' +
+          (error instanceof Error ? error.message : 'Unknown error'),
       );
     }
   }
