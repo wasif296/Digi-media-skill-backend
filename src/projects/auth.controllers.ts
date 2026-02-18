@@ -2,7 +2,7 @@ import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 
 @Controller('auth')
 export default class AuthController {
-  @Post('login')
+  @Post(['login', '/login'])
   async login(@Body() body: { email: string; password: string }) {
     const { email, password } = body;
 
