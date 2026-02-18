@@ -13,7 +13,11 @@ async function bootstrap() {
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
   app.enableCors({
-    origin: ['https://digimediaskills.com'], // Only allow frontend domain
+    origin: [
+      'https://digimediaskills.com',
+      'http://localhost:5174',
+      'https://digi-media-skill-frontend.onrender.com',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: [
