@@ -16,7 +16,7 @@ async function bootstrap() {
     origin: [
       'https://digi-media-skill.vercel.app/',
       'https://digimediaskills.com',
-      'http://localhost:5174',
+      'http://localhost:5173',
       'https://digi-media-skill-backend.onrender.com',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
